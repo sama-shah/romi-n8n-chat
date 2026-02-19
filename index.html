@@ -343,8 +343,18 @@
         const chatHistory = document.getElementById('chat-history');
 
         function formatResponse(text) {
-            return text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
+            // Bold — must run before italic
+            text = text.replace(/\*\*([\s\S]+?)\*\*/g, '<strong>$1</strong>');
+            // Italic
+            text = text.replace(/\*([\s\S]+?)\*/g, '<em>$1</em>');
+            // Markdown links
+            text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
                 '<a href="$2" target="_blank" style="color: #e75480; text-decoration: underline;">$1</a>');
+            // Paragraphs: double newline → paragraph break
+            text = text.replace(/\n\n+/g, '</p><p>');
+            // Single newline → line break
+            text = text.replace(/\n/g, '<br>');
+            return `<p>${text}</p>`;
         }
 
         function addMessage(text, role) {
@@ -353,10 +363,7 @@
             const bubble = document.createElement('div');
             bubble.className = 'message-bubble';
             if (role === 'bot') {
-                bubble.innerHTML = text
-                    .split(/\n\n+/)
-                    .map(p => `<p>${formatResponse(p.replace(/\n/g, '<br>'))}</p>`)
-                    .join('');
+                bubble.innerHTML = formatResponse(text);
             } else {
                 bubble.textContent = text;
             }
