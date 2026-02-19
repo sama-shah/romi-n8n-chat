@@ -269,6 +269,7 @@
         <div class="content">
             <div class="title">
                 <img src="IMG_0310.png" alt="Romi">
+                <p style="margin-top: 0.75rem; font-size: 0.8rem; color: #9ca3af;">PubMed supported research.</p>
             </div>
 
             <div class="chat-history" id="chat-history"></div>
@@ -343,10 +344,8 @@
         const chatHistory = document.getElementById('chat-history');
 
         function formatResponse(text) {
-            // Bold — must run before italic
-            text = text.replace(/\*\*([\s\S]+?)\*\*/g, '<strong>$1</strong>');
-            // Italic
-            text = text.replace(/\*([\s\S]+?)\*/g, '<em>$1</em>');
+            // Strip all asterisks
+            text = text.replace(/\*/g, '');
             // Markdown links
             text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
                 '<a href="$2" target="_blank" style="color: #e75480; text-decoration: underline;">$1</a>');
