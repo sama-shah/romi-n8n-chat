@@ -26,7 +26,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 3rem 2rem;
         }
 
         .content {
@@ -37,7 +37,6 @@
             flex-direction: column;
             align-items: center;
             gap: 2rem;
-            padding-bottom: 2rem;
         }
 
         .title img {
@@ -77,31 +76,27 @@
         }
 
         .message-bubble {
-            max-width: 80%;
-            padding: 0.75rem 1.25rem;
-            border-radius: 20px;
             font-size: 0.95rem;
-            line-height: 1.5;
+            line-height: 1.7;
             text-align: left;
         }
 
         .message.user .message-bubble {
             background: #ECF0F3;
             color: #1f2937;
+            padding: 0.75rem 1.25rem;
+            border-radius: 20px;
             border-bottom-right-radius: 6px;
+            max-width: 80%;
             box-shadow:
                 4px 4px 10px #D1D9E6,
                 -4px -4px 10px #FFFFFF;
         }
 
         .message.bot .message-bubble {
-            background: #ECF0F3;
             color: #374151;
-            border-bottom-left-radius: 6px;
-            max-width: 100%;
-            box-shadow:
-                inset 3px 3px 8px #D1D9E6,
-                inset -3px -3px 8px #FFFFFF;
+            width: 100%;
+            padding: 0.25rem 0;
         }
 
         .message.bot .message-bubble p + p {
@@ -347,6 +342,11 @@
         const sendButton = document.getElementById('send-button');
         const chatHistory = document.getElementById('chat-history');
 
+        function formatResponse(text) {
+            return text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
+                '<a href="$2" target="_blank" style="color: #e75480; text-decoration: underline;">$1</a>');
+        }
+
         function addMessage(text, role) {
             const msg = document.createElement('div');
             msg.className = `message ${role}`;
@@ -355,7 +355,7 @@
             if (role === 'bot') {
                 bubble.innerHTML = text
                     .split(/\n\n+/)
-                    .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+                    .map(p => `<p>${formatResponse(p.replace(/\n/g, '<br>'))}</p>`)
                     .join('');
             } else {
                 bubble.textContent = text;
